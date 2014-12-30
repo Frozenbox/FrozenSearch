@@ -32,9 +32,9 @@ setup(
         'License :: OSI Approved :: GNU Affero General Public License v3'
     ],
     keywords='metasearch searchengine search web http',
-    author='Adam Tauber',
-    author_email='asciimoo@gmail.com',
-    url='https://github.com/asciimoo/frozensearch',
+    author='Frozenbox Dev Team',
+    author_email='info@frozenbox.org',
+    url='https://github.com/frozenbox/frozensearch',
     license='GNU Affero General Public License',
     packages=find_packages('.'),
     zip_safe=False,

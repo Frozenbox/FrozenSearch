@@ -9,10 +9,10 @@ import os
 import subprocess
 
 
-class SearxTestLayer:
+class frozensearchTestLayer:
     """Base layer for non-robot tests."""
 
-    __name__ = u'SearxTestLayer'
+    __name__ = u'frozensearchTestLayer'
 
     def setUp(cls):
         pass
@@ -31,8 +31,8 @@ class SearxTestLayer:
     testTearDown = classmethod(testTearDown)
 
 
-class SearxRobotLayer(Layer):
-    """Searx Robot Test Layer"""
+class frozensearchRobotLayer(Layer):
+    """frozensearch Robot Test Layer"""
 
     def setUp(self):
         os.setpgrp()  # create new process group, become its leader
@@ -45,7 +45,7 @@ class SearxRobotLayer(Layer):
         exe = os.path.abspath(os.path.dirname(__file__) + '/../bin/py')
 
         # set robot settings path
-        os.environ['SEARX_SETTINGS_PATH'] = os.path.abspath(
+        os.environ['frozensearch_SETTINGS_PATH'] = os.path.abspath(
             os.path.dirname(__file__) + '/settings_robot.yml')
 
         # run the server
@@ -60,13 +60,13 @@ class SearxRobotLayer(Layer):
         os.killpg(os.getpgid(self.server.pid), 15)
 
         # remove previously set environment variable
-        del os.environ['SEARX_SETTINGS_PATH']
+        del os.environ['frozensearch_SETTINGS_PATH']
 
 
-SEARXROBOTLAYER = SearxRobotLayer()
+frozensearchROBOTLAYER = frozensearchRobotLayer()
 
 
-class SearxTestCase(TestCase):
+class frozensearchTestCase(TestCase):
     """Base test case for non-robot tests."""
 
-    layer = SearxTestLayer
+    layer = frozensearchTestLayer

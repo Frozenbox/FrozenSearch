@@ -1,7 +1,7 @@
 import json
 from urllib import urlencode
 from lxml import html
-from searx.engines.xpath import extract_text
+from frozensearch.engines.xpath import extract_text
 
 url = 'https://api.duckduckgo.com/'\
     + '?{query}&format=json&pretty=0&no_redirect=1&d=1'

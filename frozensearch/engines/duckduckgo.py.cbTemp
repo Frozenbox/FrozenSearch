@@ -15,7 +15,7 @@
 
 from urllib import urlencode
 from lxml.html import fromstring
-from searx.utils import html_to_text
+from frozensearch.utils import html_to_text
 
 # engine dependent config
 categories = ['general']

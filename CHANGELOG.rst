@@ -22,5 +22,5 @@
 News
 ~~~~
 
-Health status of searx instances and engines: http://stats.searx.oe5tpo.com
-(source: https://github.com/pointhi/searx_stats)
+Health status of frozensearch instances and engines: http://stats.frozensearch.oe5tpo.com
+(source: https://github.com/pointhi/frozensearch_stats)

@@ -11,7 +11,7 @@
 from urllib import urlencode
 from urlparse import urlparse, parse_qsl
 from lxml import html
-from searx.engines.xpath import extract_text, extract_url
+from frozensearch.engines.xpath import extract_text, extract_url
 
 # engine dependent config
 categories = ['general']

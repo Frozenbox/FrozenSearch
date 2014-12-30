@@ -11,7 +11,7 @@
 from urllib import urlencode
 from json import loads
 import datetime
-from searx.utils import searx_useragent
+from frozensearch.utils import frozensearch_useragent
 
 # engine dependent config
 categories = ['general', 'news']
@@ -58,8 +58,8 @@ def request(query, params):
                                       categorie=categorie,
                                       api_key=api_key)
 
-    # using searx User-Agent
-    params['headers']['User-Agent'] = searx_useragent()
+    # using frozensearch User-Agent
+    params['headers']['User-Agent'] = frozensearch_useragent()
 
     return params
 

@@ -9,7 +9,7 @@
 # @parse       url, title
 
 from json import loads
-from searx.utils import searx_useragent
+from frozensearch.utils import frozensearch_useragent
 
 # engine dependent config
 categories = ['map']
@@ -25,8 +25,8 @@ result_base_url = 'https://openstreetmap.org/{osm_type}/{osm_id}'
 def request(query, params):
     params['url'] = base_url + search_string.format(query=query)
 
-    # using searx User-Agent
-    params['headers']['User-Agent'] = searx_useragent()
+    # using frozensearch User-Agent
+    params['headers']['User-Agent'] = frozensearch_useragent()
 
     return params
 
