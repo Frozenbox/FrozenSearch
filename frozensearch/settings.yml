@@ -1,0 +1,207 @@
+server:
+    port : 8888
+    secret_key : "ultrasecretkey" # change this!
+    debug : False # Debug mode, only for development
+    request_timeout : 2.0 # seconds
+    base_url : False # Set custom base_url. Possible values: False or "https://your.custom.host/location/"
+    themes_path : "" # Custom ui themes path
+    default_theme : default # ui theme
+    https_rewrite : True # Force rewrite result urls. See frozensearch/https_rewrite.py
+    useragent_suffix : "" # suffix of frozensearch_useragent, could contain informations like an email address to the administrator
+
+engines:
+  - name : wikipedia
+    engine : mediawiki
+    shortcut : wp
+    base_url : 'https://{language}.wikipedia.org/'
+    number_of_results : 1
+
+  - name : bing
+    engine : bing
+    locale : en-US
+    shortcut : bi
+
+  - name : bing images
+    engine : bing_images
+    locale : en-US
+    shortcut : bii
+
+  - name : bing news
+    engine : bing_news
+    locale : en-US
+    shortcut : bin
+
+  - name : currency
+    engine : currency_convert
+    categories : general
+    shortcut : cc
+
+  - name : deviantart
+    engine : deviantart
+    shortcut : da
+    timeout: 3.0
+
+  - name : ddg definitions
+    engine : duckduckgo_definitions
+    shortcut : ddd
+
+  - name : wikidata
+    engine : wikidata
+    shortcut : wd
+
+  - name : duckduckgo
+    engine : duckduckgo
+    shortcut : ddg
+
+# api-key required: http://www.faroo.com/hp/api/api.html#key
+#  - name : faroo
+#    engine : faroo
+#    shortcut : fa
+#    api_key : 'apikey' # required!
+
+# down - website is under criminal investigation by the UK
+#  - name : filecrop
+#    engine : filecrop
+#    categories : files
+#    shortcut : fc
+
+  - name : 500px
+    engine : 500px
+    shortcut : px
+
+  - name : flickr
+    categories : images
+    shortcut : fl
+# You can use the engine using the official stable API, but you need an API key
+# See : https://www.flickr.com/services/apps/create/
+#    engine : flickr
+#    api_key: 'apikey' # required!
+# Or you can use the html non-stable engine, activated by default
+    engine : flickr-noapi
+
+  - name : general-file
+    engine : generalfile
+    shortcut : gf
+
+  - name : github
+    engine : github
+    shortcut : gh
+
+  - name : google
+    engine : google
+    shortcut : go
+
+  - name : google images
+    engine : google_images
+    shortcut : goi
+
+  - name : google news
+    engine : google_news
+    shortcut : gon
+
+  - name : openstreetmap
+    engine : openstreetmap
+    shortcut : osm
+
+  - name : photon
+    engine : photon
+    shortcut : ph
+
+#  - name : piratebay
+#    engine : piratebay
+#    shortcut : tpb
+
+  - name : kickass
+    engine : kickass
+    shortcut : ka
+
+  - name : soundcloud
+    engine : soundcloud
+    shortcut : sc
+
+  - name : stackoverflow
+    engine : stackoverflow
+    shortcut : st
+
+  - name : searchcode doc
+    engine : searchcode_doc
+    shortcut : scd
+
+  - name : searchcode code
+    engine : searchcode_code
+    shortcut : scc
+
+  - name : subtitleseeker
+    engine : subtitleseeker
+    shortcut : ss
+# The language is an option. You can put any language written in english
+# Examples : English, French, German, Hungarian, Chinese...
+#    language : English
+
+  - name : startpage
+    engine : startpage
+    shortcut : sp
+
+# +30% page load time
+#  - name : ixquick
+#    engine : startpage
+#    base_url : 'https://www.ixquick.com/'
+#    search_url : 'https://www.ixquick.com/do/search'
+
+  - name : twitter
+    engine : twitter
+    shortcut : tw
+
+# maybe in a fun category
+#  - name : uncyclopedia
+#    engine : mediawiki
+#    shortcut : unc
+#    base_url : https://uncyclopedia.wikia.com/
+#    number_of_results : 5
+
+# tmp suspended - too slow, too many errors
+#  - name : urbandictionary
+#    engine        : xpath
+#    search_url    : http://www.urbandictionary.com/define.php?term={query}
+#    url_xpath     : //div[@class="word"]//a/@href
+#    title_xpath   : //div[@class="word"]//a
+#    content_xpath : //div[@class="definition"]
+#    shortcut : ud
+
+  - name : yahoo
+    engine : yahoo
+    shortcut : yh
+
+  - name : yahoo news
+    engine : yahoo_news
+    shortcut : yhn
+
+  - name : youtube
+    engine : youtube
+    shortcut : yt
+
+  - name : dailymotion
+    engine : dailymotion
+    shortcut : dm
+
+  - name : vimeo
+    engine : vimeo
+    locale : en-US
+    shortcut : vm
+
+#  - name : yacy
+#    engine : yacy
+#    shortcut : ya
+#    base_url : 'http://localhost:8090'
+#    number_of_results : 5
+#    timeout: 3.0
+
+locales:
+    en : English
+    de : Deutsch
+    hu : Magyar
+    fr : Français
+    es : Español
+    it : Italiano
+    nl : Nederlands
+    ja : 日本語 (Japanese)

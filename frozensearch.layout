@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_layout_file>
+	<ActiveTarget name="Debug" />
+	<File name="AUTHORS.rst" open="0" top="0" tabpos="0">
+		<Cursor position="319" topLine="0" />
+	</File>
+	<File name="CHANGELOG.rst" open="0" top="0" tabpos="0">
+		<Cursor position="492" topLine="0" />
+	</File>
+	<File name="LICENSE" open="0" top="0" tabpos="0">
+		<Cursor position="565" topLine="0" />
+	</File>
+	<File name="Makefile" open="0" top="0" tabpos="0">
+		<Cursor position="1795" topLine="13" />
+	</File>
+	<File name="README.rst" open="0" top="0" tabpos="0">
+		<Cursor position="4689" topLine="113" />
+	</File>
+	<File name="base.cfg" open="0" top="0" tabpos="0">
+		<Cursor position="217" topLine="0" />
+	</File>
+	<File name="buildout.cfg" open="0" top="0" tabpos="0">
+		<Cursor position="536" topLine="0" />
+	</File>
+	<File name="minimal.cfg" open="0" top="0" tabpos="0">
+		<Cursor position="66" topLine="0" />
+	</File>
+	<File name="production.cfg" open="0" top="0" tabpos="0">
+		<Cursor position="447" topLine="0" />
+	</File>
+	<File name="searx/__init__.py" open="0" top="0" tabpos="0">
+		<Cursor position="1495" topLine="0" />
+	</File>
+	<File name="searx/autocomplete.py" open="0" top="0" tabpos="0">
+		<Cursor position="590" topLine="0" />
+	</File>
+	<File name="searx/engines/__init__.py" open="0" top="0" tabpos="0">
+		<Cursor position="870" topLine="0" />
+	</File>
+	<File name="searx/engines/duckduckgo.py" open="0" top="0" tabpos="0">
+		<Cursor position="511" topLine="0" />
+	</File>
+	<File name="searx/engines/duckduckgo_definitions.py" open="0" top="0" tabpos="0">
+		<Cursor position="80" topLine="0" />
+	</File>
+	<File name="searx/engines/faroo.py" open="0" top="0" tabpos="0">
+		<Cursor position="1849" topLine="15" />
+	</File>
+	<File name="searx/engines/google.py" open="0" top="0" tabpos="0">
+		<Cursor position="355" topLine="0" />
+	</File>
+	<File name="searx/engines/openstreetmap.py" open="0" top="0" tabpos="0">
+		<Cursor position="772" topLine="0" />
+	</File>
+	<File name="searx/engines/photon.py" open="0" top="0" tabpos="0">
+		<Cursor position="1126" topLine="0" />
+	</File>
+	<File name="searx/engines/subtitleseeker.py" open="0" top="0" tabpos="0">
+		<Cursor position="295" topLine="0" />
+	</File>
+	<File name="searx/engines/vimeo.py" open="0" top="0" tabpos="0">
+		<Cursor position="528" topLine="0" />
+	</File>
+	<File name="searx/engines/xpath.py" open="0" top="0" tabpos="0">
+		<Cursor position="183" topLine="0" />
+	</File>
+	<File name="searx/engines/yahoo.py" open="0" top="0" tabpos="0">
+		<Cursor position="419" topLine="0" />
+	</File>
+	<File name="searx/engines/yahoo_news.py" open="0" top="0" tabpos="0">
+		<Cursor position="451" topLine="0" />
+	</File>
+	<File name="searx/https_rewrite.py" open="0" top="0" tabpos="0">
+		<Cursor position="590" topLine="0" />
+	</File>
+	<File name="searx/languages.py" open="0" top="0" tabpos="0">
+		<Cursor position="590" topLine="0" />
+	</File>
+	<File name="searx/query.py" open="0" top="0" tabpos="0">
+		<Cursor position="792" topLine="0" />
+	</File>
+	<File name="searx/search.py" open="0" top="0" tabpos="0">
+		<Cursor position="1082" topLine="0" />
+	</File>
+	<File name="searx/settings.yml" open="0" top="0" tabpos="0">
+		<Cursor position="491" topLine="0" />
+	</File>
+	<File name="searx/static/courgette/css/style.css" open="0" top="0" tabpos="0">
+		<Cursor position="3453" topLine="147" />
+	</File>
+	<File name="searx/static/courgette/img/searx_logo.svg" open="0" top="0" tabpos="0">
+		<Cursor position="678" topLine="0" />
+	</File>
+	<File name="searx/static/courgette/js/searx.js" open="0" top="0" tabpos="0">
+		<Cursor position="15" topLine="0" />
+	</File>
+	<File name="searx/static/default/css/style.css" open="0" top="0" tabpos="0">
+		<Cursor position="2428" topLine="0" />
+	</File>
+	<File name="searx/static/default/img/searx_logo.svg" open="0" top="0" tabpos="0">
+		<Cursor position="678" topLine="0" />
+	</File>
+	<File name="searx/static/default/js/searx.js" open="0" top="0" tabpos="0">
+		<Cursor position="15" topLine="0" />
+	</File>
+	<File name="searx/static/default/less/autocompleter.less" open="0" top="0" tabpos="0">
+		<Cursor position="19" topLine="0" />
+	</File>
+	<File name="searx/static/default/less/definitions.less" open="0" top="0" tabpos="0">
+		<Cursor position="18" topLine="0" />
+	</File>
+	<File name="searx/static/default/less/mixins.less" open="0" top="0" tabpos="0">
+		<Cursor position="18" topLine="0" />
+	</File>
+	<File name="searx/static/default/less/search.less" open="0" top="0" tabpos="0">
+		<Cursor position="18" topLine="0" />
+	</File>
+	<File name="searx/static/default/less/style.less" open="0" top="0" tabpos="0">
+		<Cursor position="1193" topLine="51" />
+	</File>
+	<File name="searx/static/oscar/README.rst " open="0" top="0" tabpos="0">
+		<Cursor position="206" topLine="0" />
+	</File>
+	<File name="searx/static/oscar/gruntfile.js" open="0" top="0" tabpos="0">
+		<Cursor position="633" topLine="0" />
+	</File>
+	<File name="searx/static/oscar/js/searx.min.js" open="0" top="0" tabpos="0">
+		<Cursor position="3359" topLine="0" />
+	</File>
+	<File name="searx/static/oscar/js/searx_src/00_requirejs_config.js" open="0" top="0" tabpos="0">
+		<Cursor position="636" topLine="0" />
+	</File>
+	<File name="searx/static/oscar/js/searx_src/autocompleter.js" open="0" top="0" tabpos="0">
+		<Cursor position="1342" topLine="0" />
+	</File>
+	<File name="searx/static/oscar/js/searx_src/element_modifiers.js" open="0" top="0" tabpos="0">
+		<Cursor position="636" topLine="0" />
+	</File>
+	<File name="searx/static/oscar/js/searx_src/leaflet_map.js" open="0" top="0" tabpos="0">
+		<Cursor position="5278" topLine="55" />
+	</File>
+	<File name="searx/templates/courgette/about.html" open="0" top="0" tabpos="0">
+		<Cursor position="3620" topLine="13" />
+	</File>
+	<File name="searx/templates/courgette/base.html" open="0" top="0" tabpos="0">
+		<Cursor position="1505" topLine="0" />
+	</File>
+	<File name="searx/templates/courgette/github_ribbon.html" open="0" top="0" tabpos="0">
+		<Cursor position="49" topLine="0" />
+	</File>
+	<File name="searx/templates/courgette/index.html" open="0" top="0" tabpos="0">
+		<Cursor position="157" topLine="0" />
+	</File>
+	<File name="searx/templates/courgette/opensearch.xml" open="0" top="0" tabpos="0">
+		<Cursor position="258" topLine="0" />
+	</File>
+	<File name="searx/templates/courgette/opensearch_response_rss.xml" open="0" top="0" tabpos="0">
+		<Cursor position="328" topLine="0" />
+	</File>
+	<File name="searx/templates/default/about.html" open="0" top="0" tabpos="0">
+		<Cursor position="3624" topLine="13" />
+	</File>
+	<File name="searx/templates/default/base.html" open="0" top="0" tabpos="0">
+		<Cursor position="1497" topLine="0" />
+	</File>
+	<File name="searx/templates/default/github_ribbon.html" open="0" top="0" tabpos="0">
+		<Cursor position="49" topLine="0" />
+	</File>
+	<File name="searx/templates/default/index.html" open="0" top="0" tabpos="0">
+		<Cursor position="114" topLine="0" />
+	</File>
+	<File name="searx/templates/default/opensearch.xml" open="0" top="0" tabpos="0">
+		<Cursor position="258" topLine="0" />
+	</File>
+	<File name="searx/templates/default/opensearch_response_rss.xml" open="0" top="0" tabpos="0">
+		<Cursor position="328" topLine="0" />
+	</File>
+	<File name="searx/templates/oscar/about.html" open="0" top="0" tabpos="0">
+		<Cursor position="3665" topLine="14" />
+	</File>
+	<File name="searx/templates/oscar/base.html" open="0" top="0" tabpos="0">
+		<Cursor position="3311" topLine="29" />
+	</File>
+	<File name="searx/templates/oscar/index.html" open="0" top="0" tabpos="0">
+		<Cursor position="351" topLine="0" />
+	</File>
+	<File name="searx/templates/oscar/messages/first_time.html" open="0" top="0" tabpos="0">
+		<Cursor position="353" topLine="0" />
+	</File>
+	<File name="searx/templates/oscar/navbar.html" open="0" top="0" tabpos="0">
+		<Cursor position="583" topLine="0" />
+	</File>
+	<File name="searx/templates/oscar/opensearch.xml" open="0" top="0" tabpos="0">
+		<Cursor position="258" topLine="0" />
+	</File>
+	<File name="searx/templates/oscar/opensearch_response_rss.xml" open="0" top="0" tabpos="0">
+		<Cursor position="328" topLine="0" />
+	</File>
+	<File name="searx/templates/oscar/preferences.html" open="0" top="0" tabpos="0">
+		<Cursor position="4918" topLine="37" />
+	</File>
+	<File name="searx/templates/oscar/result_templates/map.html" open="0" top="0" tabpos="0">
+		<Cursor position="1440" topLine="0" />
+	</File>
+	<File name="searx/tests/engines/test_dummy.py" open="0" top="0" tabpos="0">
+		<Cursor position="129" topLine="0" />
+	</File>
+	<File name="searx/tests/engines/test_github.py" open="0" top="0" tabpos="0">
+		<Cursor position="179" topLine="0" />
+	</File>
+	<File name="searx/tests/test_engines.py" open="0" top="0" tabpos="0">
+		<Cursor position="77" topLine="0" />
+	</File>
+	<File name="searx/tests/test_robot.py" open="0" top="0" tabpos="0">
+		<Cursor position="615" topLine="0" />
+	</File>
+	<File name="searx/tests/test_utils.py" open="0" top="0" tabpos="0">
+		<Cursor position="1906" topLine="9" />
+	</File>
+	<File name="searx/tests/test_webapp.py" open="0" top="0" tabpos="0">
+		<Cursor position="5502" topLine="117" />
+	</File>
+	<File name="searx/translations/de/LC_MESSAGES/messages.po" open="0" top="0" tabpos="0">
+		<Cursor position="13192" topLine="350" />
+	</File>
+	<File name="searx/translations/en/LC_MESSAGES/messages.po" open="0" top="0" tabpos="0">
+		<Cursor position="11138" topLine="342" />
+	</File>
+	<File name="searx/translations/es/LC_MESSAGES/messages.po" open="0" top="0" tabpos="0">
+		<Cursor position="11873" topLine="348" />
+	</File>
+	<File name="searx/translations/fr/LC_MESSAGES/messages.po" open="0" top="0" tabpos="0">
+		<Cursor position="13251" topLine="349" />
+	</File>
+	<File name="searx/translations/hu/LC_MESSAGES/messages.po" open="0" top="0" tabpos="0">
+		<Cursor position="12843" topLine="346" />
+	</File>
+	<File name="searx/translations/it/LC_MESSAGES/messages.po" open="0" top="0" tabpos="0">
+		<Cursor position="11834" topLine="348" />
+	</File>
+	<File name="searx/translations/ja/LC_MESSAGES/messages.po" open="0" top="0" tabpos="0">
+		<Cursor position="11207" topLine="342" />
+	</File>
+	<File name="searx/translations/nl/LC_MESSAGES/messages.po" open="0" top="0" tabpos="0">
+		<Cursor position="12850" topLine="345" />
+	</File>
+	<File name="searx/utils.py" open="0" top="0" tabpos="0">
+		<Cursor position="736" topLine="0" />
+	</File>
+	<File name="searx/version.py" open="0" top="0" tabpos="0">
+		<Cursor position="740" topLine="0" />
+	</File>
+	<File name="searx/webapp.py" open="0" top="0" tabpos="0">
+		<Cursor position="9492" topLine="220" />
+	</File>
+	<File name="setup.py" open="0" top="0" tabpos="0">
+		<Cursor position="1911" topLine="24" />
+	</File>
+	<File name="utils/standalone_search.py" open="0" top="0" tabpos="0">
+		<Cursor position="194" topLine="0" />
+	</File>
+	<File name="utils/update-translations.sh" open="0" top="0" tabpos="0">
+		<Cursor position="603" topLine="0" />
+	</File>
+	<File name="versions.cfg" open="0" top="0" tabpos="0">
+		<Cursor position="1556" topLine="43" />
+	</File>
+</CodeBlocks_layout_file>
