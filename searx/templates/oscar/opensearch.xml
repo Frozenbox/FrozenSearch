@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
-  <ShortName>searx</ShortName>
-  <Description>Search searx</Description>
+  <ShortName>frozensearch</ShortName>
+  <Description>Search frozensearch</Description>
   <InputEncoding>UTF-8</InputEncoding>
-  <LongName>searx metasearch</LongName>
+  <LongName>frozensearch metasearch</LongName>
   {% if opensearch_method == 'get' %}
     <Url type="text/html" method="get" template="{{ host }}search?q={searchTerms}"/>
     {% if autocomplete %}

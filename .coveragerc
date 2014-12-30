@@ -1,15 +1,15 @@
 [run]
 branch = True
 source =
-  frozensearch/engines
-  frozensearch/__init__.py
-  frozensearch/autocomplete.py
-  frozensearch/https_rewrite.py
-  frozensearch/languages.py
-  frozensearch/search.py
-  frozensearch/testing.py
-  frozensearch/utils.py
-  frozensearch/webapp.py
+  searx/engines
+  searx/__init__.py
+  searx/autocomplete.py
+  searx/https_rewrite.py
+  searx/languages.py
+  searx/search.py
+  searx/testing.py
+  searx/utils.py
+  searx/webapp.py
 
 [report]
 show_missing = True

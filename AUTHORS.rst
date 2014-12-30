@@ -1,4 +1,4 @@
-frozensearch was created and is maintained by Adam Tauber.
+Searx was created and is maintained by Adam Tauber.
 
 Major contributing authors:
 
@@ -8,7 +8,7 @@ Major contributing authors:
 - Alexandre Flament
 
 People who have submitted patches/translates, reported bugs, consulted features or
-generally made frozensearch better:
+generally made searx better:
 
 - Laszlo Hammerl
 - Stefan Marsiske

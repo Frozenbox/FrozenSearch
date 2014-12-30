@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Installer for frozensearch package."""
+"""Installer for Searx package."""
 
 from setuptools import setup
 from setuptools import find_packages
@@ -8,7 +8,7 @@ import os
 import sys
 
 # required to load VERSION_STRING constant
-sys.path.insert(0, './frozensearch')
+sys.path.insert(0, './searx')
 from version import VERSION_STRING
 
 
@@ -19,7 +19,7 @@ def read(*rnames):
 long_description = read('README.rst')
 
 setup(
-    name='frozensearch',
+    name='searx',
     version=VERSION_STRING,
     description="A privacy-respecting, hackable metasearch engine",
     long_description=long_description,
@@ -32,9 +32,9 @@ setup(
         'License :: OSI Approved :: GNU Affero General Public License v3'
     ],
     keywords='metasearch searchengine search web http',
-    author='Frozenbox Dev Team',
-    author_email='info@frozenbox.org',
-    url='https://github.com/frozenbox/frozensearch',
+    author='Adam Tauber',
+    author_email='asciimoo@gmail.com',
+    url='https://github.com/asciimoo/searx',
     license='GNU Affero General Public License',
     packages=find_packages('.'),
     zip_safe=False,
@@ -64,11 +64,11 @@ setup(
     },
     entry_points={
         'console_scripts': [
-            'frozensearch-run = frozensearch.webapp:run'
+            'searx-run = searx.webapp:run'
         ]
     },
     package_data={
-        'frozensearch': [
+        'searx': [
             'settings.yml',
             '../README.rst',
             'static/*/*/*.*',

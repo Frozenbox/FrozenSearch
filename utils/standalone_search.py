@@ -6,8 +6,8 @@ if not len(argv) > 1:
 
 import requests
 from json import dumps
-from frozensearch.engines import google
-from frozensearch.search import default_request_params
+from searx.engines import google
+from searx.search import default_request_params
 
 request_params = default_request_params()
 # Possible params

@@ -20,14 +20,14 @@ $(python):
 
 tests: .installed.cfg
 	@bin/test
-	@grunt test --gruntfile frozensearch/static/oscar/gruntfile.js
+	@grunt test --gruntfile searx/static/oscar/gruntfile.js
 
 robot: .installed.cfg
 	@bin/robot
 
 flake8: .installed.cfg
 	@bin/flake8 setup.py
-	@bin/flake8 ./frozensearch/
+	@bin/flake8 ./searx/
 
 coverage: .installed.cfg
 	@bin/coverage run bin/test
@@ -36,27 +36,27 @@ coverage: .installed.cfg
 
 production: bin/buildout production.cfg setup.py
 	bin/buildout -c production.cfg $(options)
-	@echo "* Please modify `readlink --canonicalize-missing ./frozensearch/settings.py`"
+	@echo "* Please modify `readlink --canonicalize-missing ./searx/settings.py`"
 	@echo "* Hint 1: on production, disable debug mode and change secret_key"
-	@echo "* Hint 2: frozensearch will be executed at server startup by crontab"
+	@echo "* Hint 2: searx will be executed at server startup by crontab"
 	@echo "* Hint 3: to run immediatley, execute 'bin/supervisord'"
 
 minimal: bin/buildout minimal.cfg setup.py
 	bin/buildout -c minimal.cfg $(options)
 
 styles:
-	@lessc -x frozensearch/static/default/less/style.less > frozensearch/static/default/css/style.css
-	@lessc -x frozensearch/static/oscar/less/bootstrap/bootstrap.less > frozensearch/static/oscar/css/bootstrap.min.css
-	@lessc -x frozensearch/static/oscar/less/oscar/oscar.less > frozensearch/static/oscar/css/oscar.min.css
+	@lessc -x searx/static/default/less/style.less > searx/static/default/css/style.css
+	@lessc -x searx/static/oscar/less/bootstrap/bootstrap.less > searx/static/oscar/css/bootstrap.min.css
+	@lessc -x searx/static/oscar/less/oscar/oscar.less > searx/static/oscar/css/oscar.min.css
 
 grunt:
-	@grunt --gruntfile frozensearch/static/oscar/gruntfile.js
+	@grunt --gruntfile searx/static/oscar/gruntfile.js
 
 locales:
-	@pybabel compile -d frozensearch/translations
+	@pybabel compile -d searx/translations
 
 clean:
 	@rm -rf .installed.cfg .mr.developer.cfg bin parts develop-eggs \
-		frozensearch.egg-info lib include .coverage coverage frozensearch/static/default/css/*.css
+		searx.egg-info lib include .coverage coverage searx/static/default/css/*.css
 
 .PHONY: all tests robot flake8 coverage production minimal styles locales clean

@@ -5,7 +5,7 @@ before_install:
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
   - npm install -g less grunt-cli
-  - ( cd frozensearch/static/oscar;npm install )
+  - ( cd searx/static/oscar;npm install )
 install:
   - "make"
   - pip install coveralls
@@ -20,7 +20,7 @@ after_success:
 notifications:
   irc:
     channels:
-      - "irc.freenode.org#frozensearch"
+      - "irc.freenode.org#searx"
     template:
       - "%{repository}/#%{build_number}/%{branch} (%{author}): %{message} %{build_url}"
     on_success: change

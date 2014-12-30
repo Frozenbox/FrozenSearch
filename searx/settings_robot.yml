@@ -5,7 +5,7 @@ server:
     request_timeout : 3.0 # seconds
     base_url: False
     themes_path : ""
-    default_theme : default
+    default_theme : "courgette"
     https_rewrite : True
 
 engines:
