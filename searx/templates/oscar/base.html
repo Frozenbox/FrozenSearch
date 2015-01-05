@@ -6,7 +6,7 @@
     <meta name="keywords" content="frozensearch, search, search engine, metasearch, meta search" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1 , maximum-scale=1.0, user-scalable=1" />
-    <title>{% block title %}{% endblock %}frozensearch</title>
+    <title>{% block title %}{% endblock %}FrozenSearch</title>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" type="text/css" />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/oscar.min.css') }}" type="text/css" />
@@ -65,7 +65,7 @@
         <div class="container">
             {% block footer %}
             {% endblock %}
-            <p class="text-muted">{{ _('Powered by') }} <a href="https://github.com/asciimoo/frozensearch">frozensearch</a> - {{ frozensearch_version }} - {{ _('a privacy-respecting, hackable metasearch engine') }}</p>
+            <p class="text-muted">Powered by <a href="https://github.com/frozenbox/frozensearch">FrozenSearch</a> - a privacy-respecting, hackable metasearch engine - Proudly powered by <a href="http://en.wikipedia.org/wiki/Caffeine" title="Caffeine" rel="nofollow">C<sub>8</sub>H<sub>10</sub>N<sub>4</sub>O<sub>2</sub></a></p>
         </div>
     </div>
     <script src="{{ url_for('static', filename='js/jquery-1.11.1.min.js') }}"></script>

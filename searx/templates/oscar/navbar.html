@@ -12,7 +12,8 @@
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right"> <!-- results.html -->
-                <li{% if template_name == 'index.html' %} class="active"{% endif %}><a href="{{ url_for('index') }}" class="hmarg">{{ _('home') }}</a></li>
+		<li{% if template_name == 'index.html' %} class="active"{% endif %}><a href="{{ url_for('index') }}" class="hmarg">{{ _('home') }}</a></li>
+                <li><a href="http://www.frozenbox.org" class="hmarg">Frozenbox Network</a></li>
                 <li{% if template_name == 'about.html' %} class="active"{% endif %}><a href="{{ url_for('about') }}" class="hmarg">{{ _('about') }}</a></li>
                 <li{% if template_name == 'preferences.html' %} class="active"{% endif %}><a href="{{ url_for('preferences') }}" class="hmarg">{{ _('preferences') }}</a></li>
             </ul>
