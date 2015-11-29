@@ -15,21 +15,20 @@ along with searx. If not, see < http://www.gnu.org/licenses/ >.
 (C) 2013- by Adam Tauber, <asciimoo@gmail.com>
 '''
 
-import requests as requests_lib
 import threading
-import re
-from itertools import izip_longest, chain
-from operator import itemgetter
-from Queue import Queue
+import searx.poolrequests as requests_lib
 from time import time
-from urlparse import urlparse, unquote
+from searx import settings
 from searx.engines import (
     categories, engines
 )
 from searx.languages import language_codes
-from searx.utils import gen_useragent
+from searx.utils import gen_useragent, get_blocked_engines
 from searx.query import Query
+from searx.results import ResultContainer
+from searx import logger
 
+logger = logger.getChild('search')
 
 number_of_searches = 0
 
@@ -37,13 +36,13 @@ number_of_searches = 0
 def search_request_wrapper(fn, url, engine_name, **kwargs):
     try:
         return fn(url, **kwargs)
-    except Exception, e:
+    except:
         # increase errors stats
-        engines[engine_name].stats['errors'] += 1
+        with threading.RLock():
+            engines[engine_name].stats['errors'] += 1
 
         # print engine name and specific error message
-        print('[E] Error with engine "{0}":\n\t{1}'.format(
-            engine_name, str(e)))
+        logger.exception('engine crash: {0}'.format(engine_name))
         return
 
 
@@ -66,29 +65,45 @@ def threaded_requests(requests):
             remaining_time = max(0.0, timeout_limit - (time() - search_start))
             th.join(remaining_time)
             if th.isAlive():
-                print('engine timeout: {0}'.format(th._engine_name))
-
+                logger.warning('engine timeout: {0}'.format(th._engine_name))
 
 
 # get default reqest parameter
 def default_request_params():
     return {
-        'method': 'GET', 'headers': {}, 'data': {}, 'url': '', 'cookies': {}, 'verify': True}
+        'method': 'GET',
+        'headers': {},
+        'data': {},
+        'url': '',
+        'cookies': {},
+        'verify': True
+    }
 
 
 # create a callback wrapper for the search engine results
-def make_callback(engine_name, results_queue, callback, params):
+def make_callback(engine_name, callback, params, result_container):
 
     # creating a callback wrapper for the search engine results
     def process_callback(response, **kwargs):
+        # check if redirect comparing to the True value,
+        # because resp can be a Mock object, and any attribut name returns something.
+        if response.is_redirect is True:
+            logger.debug('{0} redirect on: {1}'.format(engine_name, response))
+            return
+
         response.search_params = params
 
-        timeout_overhead = 0.2  # seconds
         search_duration = time() - params['started']
+        # update stats with current page-load-time
+        with threading.RLock():
+            engines[engine_name].stats['page_load_time'] += search_duration
+
+        timeout_overhead = 0.2  # seconds
         timeout_limit = engines[engine_name].timeout + timeout_overhead
+
         if search_duration > timeout_limit:
-            engines[engine_name].stats['page_load_time'] += timeout_limit
-            engines[engine_name].stats['errors'] += 1
+            with threading.RLock():
+                engines[engine_name].stats['errors'] += 1
             return
 
         # callback
@@ -98,205 +113,9 @@ def make_callback(engine_name, results_queue, callback, params):
         for result in search_results:
             result['engine'] = engine_name
 
-        results_queue.put_nowait((engine_name, search_results))
-
-        # update stats with current page-load-time
-        engines[engine_name].stats['page_load_time'] += search_duration
+        result_container.extend(engine_name, search_results)
 
     return process_callback
-
-
-# return the meaningful length of the content for a result
-def content_result_len(content):
-    if isinstance(content, basestring):
-        content = re.sub('[,;:!?\./\\\\ ()-_]', '', content)
-        return len(content)
-    else:
-        return 0
-
-
-# score results and remove duplications
-def score_results(results):
-    # calculate scoring parameters
-    flat_res = filter(
-        None, chain.from_iterable(izip_longest(*results.values())))
-    flat_len = len(flat_res)
-    engines_len = len(results)
-
-    results = []
-
-    # pass 1: deduplication + scoring
-    for i, res in enumerate(flat_res):
-
-        res['parsed_url'] = urlparse(res['url'])
-
-        res['host'] = res['parsed_url'].netloc
-
-        if res['host'].startswith('www.'):
-            res['host'] = res['host'].replace('www.', '', 1)
-
-        res['engines'] = [res['engine']]
-
-        weight = 1.0
-
-        # strip multiple spaces and cariage returns from content
-        if res.get('content'):
-            res['content'] = re.sub(' +', ' ',
-                                    res['content'].strip().replace('\n', ''))
-
-        # get weight of this engine if possible
-        if hasattr(engines[res['engine']], 'weight'):
-            weight = float(engines[res['engine']].weight)
-
-        # calculate score for that engine
-        score = int((flat_len - i) / engines_len) * weight + 1
-
-        # check for duplicates
-        duplicated = False
-        for new_res in results:
-            # remove / from the end of the url if required
-            p1 = res['parsed_url'].path[:-1]\
-                if res['parsed_url'].path.endswith('/')\
-                else res['parsed_url'].path
-            p2 = new_res['parsed_url'].path[:-1]\
-                if new_res['parsed_url'].path.endswith('/')\
-                else new_res['parsed_url'].path
-
-            # check if that result is a duplicate
-            if res['host'] == new_res['host'] and\
-               unquote(p1) == unquote(p2) and\
-               res['parsed_url'].query == new_res['parsed_url'].query and\
-               res.get('template') == new_res.get('template'):
-                duplicated = new_res
-                break
-
-        # merge duplicates together
-        if duplicated:
-            # using content with more text
-            if content_result_len(res.get('content', '')) >\
-                    content_result_len(duplicated.get('content', '')):
-                duplicated['content'] = res['content']
-
-            # increase result-score
-            duplicated['score'] += score
-
-            # add engine to list of result-engines
-            duplicated['engines'].append(res['engine'])
-
-            # using https if possible
-            if duplicated['parsed_url'].scheme == 'https':
-                continue
-            elif res['parsed_url'].scheme == 'https':
-                duplicated['url'] = res['parsed_url'].geturl()
-                duplicated['parsed_url'] = res['parsed_url']
-
-        # if there is no duplicate found, append result
-        else:
-            res['score'] = score
-            results.append(res)
-
-    results = sorted(results, key=itemgetter('score'), reverse=True)
-
-    # pass 2 : group results by category and template
-    gresults = []
-    categoryPositions = {}
-
-    for i, res in enumerate(results):
-        # FIXME : handle more than one category per engine
-        category = engines[res['engine']].categories[0] + ':' + ''\
-            if 'template' not in res\
-            else res['template']
-
-        current = None if category not in categoryPositions\
-            else categoryPositions[category]
-
-        # group with previous results using the same category
-        # if the group can accept more result and is not too far
-        # from the current position
-        if current is not None and (current['count'] > 0)\
-                and (len(gresults) - current['index'] < 20):
-            # group with the previous results using
-            # the same category with this one
-            index = current['index']
-            gresults.insert(index, res)
-
-            # update every index after the current one
-            # (including the current one)
-            for k in categoryPositions:
-                v = categoryPositions[k]['index']
-                if v >= index:
-                    categoryPositions[k]['index'] = v+1
-
-            # update this category
-            current['count'] -= 1
-
-        else:
-            # same category
-            gresults.append(res)
-
-            # update categoryIndex
-            categoryPositions[category] = {'index': len(gresults), 'count': 8}
-
-    # return gresults
-    return gresults
-
-
-def merge_two_infoboxes(infobox1, infobox2):
-    if 'urls' in infobox2:
-        urls1 = infobox1.get('urls', None)
-        if urls1 is None:
-            urls1 = []
-            infobox1.set('urls', urls1)
-
-        urlSet = set()
-        for url in infobox1.get('urls', []):
-            urlSet.add(url.get('url', None))
-
-        for url in infobox2.get('urls', []):
-            if url.get('url', None) not in urlSet:
-                urls1.append(url)
-
-    if 'attributes' in infobox2:
-        attributes1 = infobox1.get('attributes', None)
-        if attributes1 is None:
-            attributes1 = []
-            infobox1.set('attributes', attributes1)
-
-        attributeSet = set()
-        for attribute in infobox1.get('attributes', []):
-            if attribute.get('label', None) not in attributeSet:
-                attributeSet.add(attribute.get('label', None))
-
-        for attribute in infobox2.get('attributes', []):
-            attributes1.append(attribute)
-
-    if 'content' in infobox2:
-        content1 = infobox1.get('content', None)
-        content2 = infobox2.get('content', '')
-        if content1 is not None:
-            if content_result_len(content2) > content_result_len(content1):
-                infobox1['content'] = content2
-        else:
-            infobox1.set('content', content2)
-
-
-def merge_infoboxes(infoboxes):
-    results = []
-    infoboxes_id = {}
-    for infobox in infoboxes:
-        add_infobox = True
-        infobox_id = infobox.get('id', None)
-        if infobox_id is not None:
-            existingIndex = infoboxes_id.get(infobox_id, None)
-            if existingIndex is not None:
-                merge_two_infoboxes(results[existingIndex], infobox)
-                add_infobox = False
-
-        if add_infobox:
-            results.append(infobox)
-            infoboxes_id[infobox_id] = len(results)-1
-
-    return results
 
 
 class Search(object):
@@ -314,15 +133,9 @@ class Search(object):
         self.lang = 'all'
 
         # set blocked engines
-        if request.cookies.get('blocked_engines'):
-            self.blocked_engines = request.cookies['blocked_engines'].split(',')  # noqa
-        else:
-            self.blocked_engines = []
+        self.blocked_engines = get_blocked_engines(engines, request.cookies)
 
-        self.results = []
-        self.suggestions = []
-        self.answers = []
-        self.infoboxes = []
+        self.result_container = ResultContainer()
         self.request_data = {}
 
         # set specific language if set
@@ -366,23 +179,44 @@ class Search(object):
 
         # if engines are calculated from query,
         # set categories by using that informations
-        if self.engines:
+        if self.engines and query_obj.specific:
             self.categories = list(set(engine['category']
                                        for engine in self.engines))
 
         # otherwise, using defined categories to
         # calculate which engines should be used
         else:
-            # set used categories
+            # set categories/engines
+            load_default_categories = True
             for pd_name, pd in self.request_data.items():
-                if pd_name.startswith('category_'):
+                if pd_name == 'categories':
+                    self.categories.extend(categ for categ in map(unicode.strip, pd.split(',')) if categ in categories)
+                elif pd_name == 'engines':
+                    pd_engines = [{'category': engines[engine].categories[0],
+                                   'name': engine}
+                                  for engine in map(unicode.strip, pd.split(',')) if engine in engines]
+                    if pd_engines:
+                        self.engines.extend(pd_engines)
+                        load_default_categories = False
+                elif pd_name.startswith('category_'):
                     category = pd_name[9:]
+
                     # if category is not found in list, skip
                     if category not in categories:
                         continue
 
-                    # add category to list
-                    self.categories.append(category)
+                    if pd != 'off':
+                        # add category to list
+                        self.categories.append(category)
+                    elif category in self.categories:
+                        # remove category from list if property is set to 'off'
+                        self.categories.remove(category)
+
+            if not load_default_categories:
+                if not self.categories:
+                    self.categories = list(set(engine['category']
+                                               for engine in self.engines))
+                return
 
             # if no category is specified for this search,
             # using user-defined default-configuration which
@@ -403,9 +237,9 @@ class Search(object):
             # declared under the specific categories
             for categ in self.categories:
                 self.engines.extend({'category': categ,
-                                     'name': x.name}
-                                    for x in categories[categ]
-                                    if x.name not in self.blocked_engines)
+                                     'name': engine.name}
+                                    for engine in categories[categ]
+                                    if (engine.name, categ) not in self.blocked_engines)
 
     # do search-request
     def search(self, request):
@@ -413,11 +247,6 @@ class Search(object):
 
         # init vars
         requests = []
-        results_queue = Queue()
-        results = {}
-        suggestions = set()
-        answers = set()
-        infoboxes = []
 
         # increase number of searches
         number_of_searches += 1
@@ -448,7 +277,17 @@ class Search(object):
             request_params['category'] = selected_engine['category']
             request_params['started'] = time()
             request_params['pageno'] = self.pageno
-            request_params['language'] = self.lang
+
+            if hasattr(engine, 'language') and engine.language:
+                request_params['language'] = engine.language
+            else:
+                request_params['language'] = self.lang
+
+            try:
+                # 0 = None, 1 = Moderate, 2 = Strict
+                request_params['safesearch'] = int(request.cookies.get('safesearch'))
+            except Exception:
+                request_params['safesearch'] = settings['search']['safe_search']
 
             # update request parameters dependent on
             # search-engine (contained in engines folder)
@@ -461,9 +300,9 @@ class Search(object):
             # create a callback wrapper for the search engine results
             callback = make_callback(
                 selected_engine['name'],
-                results_queue,
                 engine.response,
-                request_params)
+                request_params,
+                self.result_container)
 
             # create dictionary which contain all
             # informations about the request
@@ -487,50 +326,14 @@ class Search(object):
                 continue
 
             # append request to list
-            requests.append((req, request_params['url'], request_args, selected_engine['name']))
+            requests.append((req, request_params['url'],
+                             request_args,
+                             selected_engine['name']))
 
         if not requests:
-            return results, suggestions, answers, infoboxes
+            return self
         # send all search-request
         threaded_requests(requests)
 
-
-        while not results_queue.empty():
-            engine_name, engine_results = results_queue.get_nowait()
-
-            # TODO type checks
-            [suggestions.add(x['suggestion'])
-             for x in list(engine_results)
-             if 'suggestion' in x
-             and engine_results.remove(x) is None]
-
-            [answers.add(x['answer'])
-             for x in list(engine_results)
-             if 'answer' in x
-             and engine_results.remove(x) is None]
-
-            infoboxes.extend(x for x in list(engine_results)
-                             if 'infobox' in x
-                             and engine_results.remove(x) is None)
-
-            results[engine_name] = engine_results
-
-        # update engine-specific stats
-        for engine_name, engine_results in results.items():
-            engines[engine_name].stats['search_count'] += 1
-            engines[engine_name].stats['result_count'] += len(engine_results)
-
-        # score results and remove duplications
-        results = score_results(results)
-
-        # merge infoboxes according to their ids
-        infoboxes = merge_infoboxes(infoboxes)
-
-        # update engine stats, using calculated score
-        for result in results:
-            for res_engine in result['engines']:
-                engines[result['engine']]\
-                    .stats['score_count'] += result['score']
-
         # return results, suggestions, answers and infoboxes
-        return results, suggestions, answers, infoboxes
+        return self

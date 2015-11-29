@@ -1,22 +1,101 @@
-0.6.0
-=====
+0.8.0 2015.09.08
+================
 
--  Changelog added
--  New engines
-    -  Flickr (api)
-    -  Subtitleseeker
-    -  photon
-    -  500px
-    -  Searchcode
-    -  Searchcode doc
-    -  Kickass torrent
--  Precise search request timeout handling
--  Better favicon support
--  Stricter config parsing
--  Translation updates
--  Multiple ui fixes
--  Flickr (noapi) engine fix
--  Pep8 fixes
+- New engines
+
+  - Blekko (image)
+  - Gigablast (general)
+  - Spotify (music)
+  - Swisscows (general, images)
+  - Qwant (general, images, news, social media)
+- Plugin system
+- New plugins
+
+  - HTTPS rewrite
+  - Search on cagetory select
+  - User information
+  - Tracker url part remover
+- Multiple outgoing IP and HTTP/HTTPS proxy support
+- New autocompleter: startpage
+- New theme: pix-art
+- Settings file structure change
+- Fabfile, docker deployment
+- Optional safesearch result filter
+- Force HTTPS in engines if possible
+- Disabled HTTP referrer on outgoing links
+- Display cookie information
+- Prettier search URLs
+- Right-to-left text handling in themes
+- Translation updates (New locales: Chinese, Hebrew, Portuguese, Romanian)
+
+
+New dependencies
+~~~~~~~~~~~~~~~~
+
+- pyopenssl
+- ndg-httpsclient
+- pyasn1
+- pyasn1-modules
+- certifi
+
+
+News
+~~~~
+
+@dalf joined the maintainer "team"
+
+0.7.0 2015.02.03
+================
+
+- New engines
+
+  - Digg
+  - Google Play Store
+  - Deezer
+  - Btdigg
+  - Mixcloud
+  - 1px
+- Image proxy
+- Search speed improvements
+- Autocompletition of engines, shortcuts and supported languages
+- Translation updates (New locales: Turkish, Russian)
+- Default theme changed to oscar
+- Settings option to disable engines by default
+- UI code cleanup and restructure
+- Engine tests
+- Multiple engine bug fixes and tweaks
+- Config option to set default interface locale
+- Flexible result template handling
+- Application logging and sophisticated engine exception tracebacks
+- Kickass torrent size display (oscar theme)
+
+
+New dependencies
+~~~~~~~~~~~~~~~~
+
+-  pygments - http://pygments.org/
+
+
+0.6.0 - 2014.12.25
+==================
+
+- Changelog added
+- New engines
+
+  - Flickr (api)
+  - Subtitleseeker
+  - photon
+  - 500px
+  - Searchcode
+  - Searchcode doc
+  - Kickass torrent
+- Precise search request timeout handling
+- Better favicon support
+- Stricter config parsing
+- Translation updates
+- Multiple ui fixes
+- Flickr (noapi) engine fix
+- Pep8 fixes
 
 
 News

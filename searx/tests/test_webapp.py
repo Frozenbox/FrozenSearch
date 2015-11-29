@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import json
+from mock import Mock
 from urlparse import ParseResult
-from mock import patch
 from searx import webapp
 from searx.testing import SearxTestCase
 
@@ -12,6 +12,7 @@ class ViewsTestCase(SearxTestCase):
     def setUp(self):
         webapp.app.config['TESTING'] = True  # to get better error messages
         self.app = webapp.app.test_client()
+        webapp.default_theme = 'default'
 
         # set some defaults
         self.test_results = [
@@ -32,6 +33,16 @@ class ViewsTestCase(SearxTestCase):
             },
         ]
 
+        def search_mock(search_self, *args):
+            search_self.result_container = Mock(get_ordered_results=lambda: self.test_results,
+                                                answers=set(),
+                                                suggestions=set(),
+                                                infoboxes=[],
+                                                results=self.test_results,
+                                                results_length=lambda: len(self.test_results))
+
+        webapp.Search.search = search_mock
+
         self.maxDiff = None  # to see full diffs
 
     def test_index_empty(self):
@@ -39,17 +50,10 @@ class ViewsTestCase(SearxTestCase):
         self.assertEqual(result.status_code, 200)
         self.assertIn('<div class="title"><h1>searx</h1></div>', result.data)
 
-    @patch('searx.search.Search.search')
-    def test_index_html(self, search):
-        search.return_value = (
-            self.test_results,
-            set(),
-            set(),
-            set()
-        )
+    def test_index_html(self):
         result = self.app.post('/', data={'q': 'test'})
         self.assertIn(
-            '<h3 class="result_title"><img width="14" height="14" class="favicon" src="static/default/img/icon_youtube.ico" alt="youtube" /><a href="http://second.test.xyz">Second <span class="highlight">Test</span></a></h3>',  # noqa
+            '<h3 class="result_title"><img width="14" height="14" class="favicon" src="/static/themes/default/img/icons/icon_youtube.ico" alt="youtube" /><a href="http://second.test.xyz" rel="noreferrer">Second <span class="highlight">Test</span></a></h3>',  # noqa
             result.data
         )
         self.assertIn(
@@ -57,14 +61,7 @@ class ViewsTestCase(SearxTestCase):
             result.data
         )
 
-    @patch('searx.search.Search.search')
-    def test_index_json(self, search):
-        search.return_value = (
-            self.test_results,
-            set(),
-            set(),
-            set()
-        )
+    def test_index_json(self):
         result = self.app.post('/', data={'q': 'test', 'format': 'json'})
 
         result_dict = json.loads(result.data)
@@ -75,14 +72,7 @@ class ViewsTestCase(SearxTestCase):
         self.assertEqual(
             result_dict['results'][0]['url'], 'http://first.test.xyz')
 
-    @patch('searx.search.Search.search')
-    def test_index_csv(self, search):
-        search.return_value = (
-            self.test_results,
-            set(),
-            set(),
-            set()
-        )
+    def test_index_csv(self):
         result = self.app.post('/', data={'q': 'test', 'format': 'csv'})
 
         self.assertEqual(
@@ -92,14 +82,7 @@ class ViewsTestCase(SearxTestCase):
             result.data
         )
 
-    @patch('searx.search.Search.search')
-    def test_index_rss(self, search):
-        search.return_value = (
-            self.test_results,
-            set(),
-            set(),
-            set()
-        )
+    def test_index_rss(self):
         result = self.app.post('/', data={'q': 'test', 'format': 'rss'})
 
         self.assertIn(

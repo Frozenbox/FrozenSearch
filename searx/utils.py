@@ -1,27 +1,37 @@
-# import htmlentitydefs
+import cStringIO
+import csv
+import os
+import re
+
+from babel.dates import format_date
 from codecs import getincrementalencoder
 from HTMLParser import HTMLParser
 from random import choice
 
 from searx.version import VERSION_STRING
 from searx import settings
+from searx import logger
 
-import cStringIO
-import csv
-import os
-import re
 
-ua_versions = ('29.0',
-               '30.0',
-               '31.0',
-               '32.0',
-               '33.0')
+logger = logger.getChild('utils')
+
+ua_versions = ('33.0',
+               '34.0',
+               '35.0',
+               '36.0',
+               '37.0',
+               '38.0',
+               '39.0',
+               '40.0')
 
 ua_os = ('Windows NT 6.3; WOW64',
          'X11; Linux x86_64',
          'X11; Linux x86')
 
-ua = "Mozilla/5.0 ({os}) Gecko/20100101 Firefox/{version}"
+ua = "Mozilla/5.0 ({os}; rv:{version}) Gecko/20100101 Firefox/{version}"
+
+blocked_tags = ('script',
+                'style')
 
 
 def gen_useragent():
@@ -30,8 +40,9 @@ def gen_useragent():
 
 
 def searx_useragent():
-    return 'searx/{searx_version} {suffix}'.format(searx_version=VERSION_STRING,
-                                          suffix=settings['server'].get('useragent_suffix', ''))
+    return 'searx/{searx_version} {suffix}'.format(
+           searx_version=VERSION_STRING,
+           suffix=settings['outgoing'].get('useragent_suffix', ''))
 
 
 def highlight_content(content, query):
@@ -66,11 +77,31 @@ class HTMLTextExtractor(HTMLParser):
     def __init__(self):
         HTMLParser.__init__(self)
         self.result = []
+        self.tags = []
+
+    def handle_starttag(self, tag, attrs):
+        self.tags.append(tag)
+
+    def handle_endtag(self, tag):
+        if not self.tags:
+            return
+
+        if tag != self.tags[-1]:
+            raise Exception("invalid html")
+
+        self.tags.pop()
+
+    def is_valid_tag(self):
+        return not self.tags or self.tags[-1] not in blocked_tags
 
     def handle_data(self, d):
+        if not self.is_valid_tag():
+            return
         self.result.append(d)
 
     def handle_charref(self, number):
+        if not self.is_valid_tag():
+            return
         if number[0] in (u'x', u'X'):
             codepoint = int(number[1:], 16)
         else:
@@ -78,15 +109,19 @@ class HTMLTextExtractor(HTMLParser):
         self.result.append(unichr(codepoint))
 
     def handle_entityref(self, name):
+        if not self.is_valid_tag():
+            return
         # codepoint = htmlentitydefs.name2codepoint[name]
         # self.result.append(unichr(codepoint))
         self.result.append(name)
 
     def get_text(self):
-        return u''.join(self.result)
+        return u''.join(self.result).strip()
 
 
 def html_to_text(html):
+    html = html.replace('\n', ' ')
+    html = ' '.join(html.split())
     s = HTMLTextExtractor()
     s.feed(html)
     return s.get_text()
@@ -132,11 +167,89 @@ def get_themes(root):
     """Returns available themes list."""
 
     static_path = os.path.join(root, 'static')
-    static_names = set(os.listdir(static_path))
     templates_path = os.path.join(root, 'templates')
-    templates_names = set(os.listdir(templates_path))
 
-    themes = []
-    for name in static_names.intersection(templates_names):
-        themes += [name]
+    themes = os.listdir(os.path.join(static_path, 'themes'))
     return static_path, templates_path, themes
+
+
+def get_static_files(base_path):
+    base_path = os.path.join(base_path, 'static')
+    static_files = set()
+    base_path_length = len(base_path) + 1
+    for directory, _, files in os.walk(base_path):
+        for filename in files:
+            f = os.path.join(directory[base_path_length:], filename)
+            static_files.add(f)
+    return static_files
+
+
+def get_result_templates(base_path):
+    base_path = os.path.join(base_path, 'templates')
+    result_templates = set()
+    base_path_length = len(base_path) + 1
+    for directory, _, files in os.walk(base_path):
+        if directory.endswith('result_templates'):
+            for filename in files:
+                f = os.path.join(directory[base_path_length:], filename)
+                result_templates.add(f)
+    return result_templates
+
+
+def format_date_by_locale(date, locale_string):
+    # strftime works only on dates after 1900
+
+    if date.year <= 1900:
+        return date.isoformat().split('T')[0]
+
+    if locale_string == 'all':
+        locale_string = settings['ui']['default_locale'] or 'en_US'
+
+    return format_date(date, locale=locale_string)
+
+
+def dict_subset(d, properties):
+    result = {}
+    for k in properties:
+        if k in d:
+            result[k] = d[k]
+    return result
+
+
+def prettify_url(url, max_length=74):
+    if len(url) > max_length:
+        chunk_len = max_length / 2 + 1
+        return u'{0}[...]{1}'.format(url[:chunk_len], url[-chunk_len:])
+    else:
+        return url
+
+
+# get element in list or default value
+def list_get(a_list, index, default=None):
+    if len(a_list) > index:
+        return a_list[index]
+    else:
+        return default
+
+
+def get_blocked_engines(engines, cookies):
+    if 'blocked_engines' not in cookies:
+        return [(engine_name, category) for engine_name in engines
+                for category in engines[engine_name].categories if engines[engine_name].disabled]
+
+    blocked_engine_strings = cookies.get('blocked_engines', '').split(',')
+    blocked_engines = []
+
+    if not blocked_engine_strings:
+        return blocked_engines
+
+    for engine_string in blocked_engine_strings:
+        if engine_string.find('__') > -1:
+            engine, category = engine_string.split('__', 1)
+            if engine in engines and category in engines[engine].categories:
+                blocked_engines.append((engine, category))
+        elif engine_string in engines:
+            for category in engines[engine_string].categories:
+                blocked_engines.append((engine_string, category))
+
+    return blocked_engines

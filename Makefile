@@ -18,16 +18,16 @@ $(python):
 	virtualenv -p python$(version) --no-site-packages .
 	@touch $@
 
-tests: .installed.cfg
-	@bin/test
-	@grunt test --gruntfile searx/static/oscar/gruntfile.js
-
 robot: .installed.cfg
 	@bin/robot
 
 flake8: .installed.cfg
 	@bin/flake8 setup.py
 	@bin/flake8 ./searx/
+
+tests: .installed.cfg flake8
+	@bin/test
+	@grunt test --gruntfile searx/static/themes/oscar/gruntfile.js
 
 coverage: .installed.cfg
 	@bin/coverage run bin/test
@@ -45,18 +45,22 @@ minimal: bin/buildout minimal.cfg setup.py
 	bin/buildout -c minimal.cfg $(options)
 
 styles:
-	@lessc -x searx/static/default/less/style.less > searx/static/default/css/style.css
-	@lessc -x searx/static/oscar/less/bootstrap/bootstrap.less > searx/static/oscar/css/bootstrap.min.css
-	@lessc -x searx/static/oscar/less/oscar/oscar.less > searx/static/oscar/css/oscar.min.css
+	@lessc -x searx/static/themes/default/less/style.less > searx/static/themes/default/css/style.css
+	@lessc -x searx/static/themes/default/less/style-rtl.less > searx/static/themes/default/css/style-rtl.css
+	@lessc -x searx/static/themes/courgette/less/style.less > searx/static/themes/courgette/css/style.css
+	@lessc -x searx/static/themes/courgette/less/style-rtl.less > searx/static/themes/courgette/css/style-rtl.css
+	@lessc -x searx/static/less/bootstrap/bootstrap.less > searx/static/css/bootstrap.min.css
+	@lessc -x searx/static/themes/oscar/less/oscar/oscar.less > searx/static/themes/oscar/css/oscar.min.css
+	@lessc -x searx/static/themes/pix-art/less/style.less > searx/static/themes/pix-art/css/style.css
 
 grunt:
-	@grunt --gruntfile searx/static/oscar/gruntfile.js
+	@grunt --gruntfile searx/static/themes/oscar/gruntfile.js
 
 locales:
 	@pybabel compile -d searx/translations
 
 clean:
 	@rm -rf .installed.cfg .mr.developer.cfg bin parts develop-eggs \
-		searx.egg-info lib include .coverage coverage searx/static/default/css/*.css
+		searx.egg-info lib include .coverage coverage searx/static/themes/default/css/*.css
 
 .PHONY: all tests robot flake8 coverage production minimal styles locales clean

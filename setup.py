@@ -44,8 +44,14 @@ setup(
         'requests',
         'lxml',
         'pyyaml',
+        'pygments',
         'setuptools',
         'python-dateutil',
+        'pyopenssl',
+        'ndg-httpsclient',
+        'pyasn1',
+        'pyasn1-modules',
+        'certifi'
     ],
     extras_require={
         'test': [
@@ -71,13 +77,16 @@ setup(
         'searx': [
             'settings.yml',
             '../README.rst',
+            'data/*',
+            'plugins/*/*',
+            'static/*.*',
+            'static/*/*.*',
             'static/*/*/*.*',
             'static/*/*/*/*.*',
             'static/*/*/*/*/*.*',
-            'translations/*/*/*',
             'templates/*/*.*',
             'templates/*/*/*.*',
-            'https_rules/*.xml'
+            'translations/*/*/*'
         ],
     },
 

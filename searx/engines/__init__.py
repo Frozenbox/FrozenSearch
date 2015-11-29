@@ -22,6 +22,10 @@ from imp import load_source
 from flask.ext.babel import gettext
 from operator import itemgetter
 from searx import settings
+from searx import logger
+
+
+logger = logger.getChild('engines')
 
 engine_dir = dirname(realpath(__file__))
 
@@ -65,24 +69,27 @@ def load_engine(engine_data):
         engine.categories = ['general']
 
     if not hasattr(engine, 'language_support'):
-        # engine.language_support = False
         engine.language_support = True
 
+    if not hasattr(engine, 'safesearch'):
+        engine.safesearch = False
+
     if not hasattr(engine, 'timeout'):
-        # engine.language_support = False
-        engine.timeout = settings['server']['request_timeout']
+        engine.timeout = settings['outgoing']['request_timeout']
 
     if not hasattr(engine, 'shortcut'):
-        # engine.shortcut = '''
         engine.shortcut = ''
+
+    if not hasattr(engine, 'disabled'):
+        engine.disabled = False
 
     # checking required variables
     for engine_attr in dir(engine):
         if engine_attr.startswith('_'):
             continue
         if getattr(engine, engine_attr) is None:
-            print('[E] Engine config error: Missing attribute "{0}.{1}"'\
-                  .format(engine.name, engine_attr))
+            logger.error('Missing engine config attribute: "{0}.{1}"'
+                         .format(engine.name, engine_attr))
             sys.exit(1)
 
     engine.stats = {
@@ -100,10 +107,9 @@ def load_engine(engine_data):
         categories['general'].append(engine)
 
     if engine.shortcut:
-        # TODO check duplications
         if engine.shortcut in engine_shortcuts:
-            print('[E] Engine config error: ambigious shortcut: {0}'\
-                  .format(engine.shortcut))
+            logger.error('Engine config error: ambigious shortcut: {0}'
+                         .format(engine.shortcut))
             sys.exit(1)
         engine_shortcuts[engine.shortcut] = engine.name
     return engine
@@ -199,7 +205,7 @@ def get_engines_stats():
 
 
 if 'engines' not in settings or not settings['engines']:
-    print '[E] Error no engines found. Edit your settings.yml'
+    logger.error('No engines found. Edit your settings.yml')
     exit(2)
 
 for engine_data in settings['engines']:

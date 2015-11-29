@@ -1,15 +1,18 @@
-## Soundcloud (Music)
-#
-# @website     https://soundcloud.com
-# @provide-api yes (https://developers.soundcloud.com/)
-#
-# @using-api   yes
-# @results     JSON
-# @stable      yes
-# @parse       url, title, content
+"""
+ Soundcloud (Music)
+
+ @website     https://soundcloud.com
+ @provide-api yes (https://developers.soundcloud.com/)
+
+ @using-api   yes
+ @results     JSON
+ @stable      yes
+ @parse       url, title, content, publishedDate, embedded
+"""
 
 from json import loads
-from urllib import urlencode
+from urllib import urlencode, quote_plus
+from dateutil import parser
 
 # engine dependent config
 categories = ['music']
@@ -26,6 +29,10 @@ search_url = url + 'search?{query}'\
                          '&offset={offset}'\
                          '&linked_partitioning=1'\
                          '&client_id={client_id}'   # noqa
+
+embedded_url = '<iframe width="100%" height="166" ' +\
+    'scrolling="no" frameborder="no" ' +\
+    'data-src="https://w.soundcloud.com/player/?url={uri}"></iframe>'
 
 
 # do search-request
@@ -50,10 +57,15 @@ def response(resp):
         if result['kind'] in ('track', 'playlist'):
             title = result['title']
             content = result['description']
+            publishedDate = parser.parse(result['last_modified'])
+            uri = quote_plus(result['uri'])
+            embedded = embedded_url.format(uri=uri)
 
             # append result
             results.append({'url': result['permalink_url'],
                             'title': title,
+                            'publishedDate': publishedDate,
+                            'embedded': embedded,
                             'content': content})
 
     # return results

@@ -1,16 +1,22 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"{% if rtl %} dir="rtl"{% endif %}>
 <head>
     <meta charset="UTF-8" />
-    <meta name="description" content="frozensearch - a privacy-respecting, hackable metasearch engine" />
-    <meta name="keywords" content="frozensearch, search, search engine, metasearch, meta search" />
+    <meta name="description" content="Searx - a privacy-respecting, hackable metasearch engine" />
+    <meta name="keywords" content="searx, search, search engine, metasearch, meta search" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="generator" content="searx/{{ searx_version }}">
+    <meta name="referrer" content="no-referrer">
     <meta name="viewport" content="width=device-width, initial-scale=1 , maximum-scale=1.0, user-scalable=1" />
-    <title>{% block title %}{% endblock %}FrozenSearch</title>
+    {% block meta %}{% endblock %}
+    <title>{% block title %}{% endblock %}searx</title>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" type="text/css" />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/oscar.min.css') }}" type="text/css" />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/leaflet.min.css') }}" type="text/css" />
+    {% for css in styles %}
+        <link rel="stylesheet" href="{{ url_for('static', filename=css) }}" type="text/css" />
+    {% endfor %}
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -25,17 +31,19 @@
     {% block head %}
     {% endblock %}
 
-    <link title="frozensearch" type="application/opensearchdescription+xml" rel="search" href="{{ url_for('opensearch') }}"/>
+    <link title="searx" type="application/opensearchdescription+xml" rel="search" href="{{ url_for('opensearch') }}"/>
 
     <script type="text/javascript">
-        frozensearch = {};
-        frozensearch.method = "{{ method or 'POST' }}";
-        frozensearch.autocompleter = {% if autocomplete %}true{% else %}false{% endif %};
+        searx = {};
+        searx.method = "{{ method or 'POST' }}";
+        searx.autocompleter = {% if autocomplete %}true{% else %}false{% endif %};
     </script>
     <noscript>
         <style type="text/css">
-            .tab-content > .active_if_nojs {display: block;}
+            .tab-content > .active_if_nojs, .active_if_nojs {display: block !important; visibility: visible !important;}
+            .margin_top_if_nojs {margin-top: 20px;}
             .hide_if_nojs {display: none !important;overflow:none !important;}
+            .disabled_if_nojs {pointer-events: none; cursor: default; text-decoration: line-through;}
         </style>
     </noscript>
 </head>
@@ -49,7 +57,9 @@
     {% endblock %}
     {% block site_alert_warning_nojs %}
     <noscript>
+        <div class="visible-xs-block">
         {% include 'oscar/messages/js_disabled.html' %}
+        </div>
     </noscript>
     {% endblock %}
     {% block site_alert_info %}
@@ -72,6 +82,9 @@
     <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
     {% if autocomplete %}<script src="{{ url_for('static', filename='js/typeahead.bundle.min.js') }}"></script>{% endif %}
     <script src="{{ url_for('static', filename='js/require-2.1.15.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/frozensearch.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/searx.min.js') }}"></script>
+    {% for script in scripts %}
+        <script src="{{ url_for('static', filename=script) }}"></script>
+    {% endfor %}
 </body>
 </html>

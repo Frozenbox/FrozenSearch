@@ -14,16 +14,17 @@ See the `wiki <https://github.com/asciimoo/searx/wiki>`__ for more information.
 Features
 ~~~~~~~~
 
--  Tracking free
--  Supports multiple output formats
-    -  json ``curl https://searx.me/?format=json&q=[query]``
-    -  csv ``curl https://searx.me/?format=csv&q=[query]``
-    -  opensearch/rss ``curl https://searx.me/?format=rss&q=[query]``
--  Opensearch support (you can set as default search engine)
--  Configurable search engines/categories
--  Different search languages
--  Duckduckgo like !bang functionality with engine shortcuts
--  Parallel queries - relatively fast
+- Tracking free
+- Supports multiple output formats
+
+  - json ``curl https://searx.me/?format=json&q=[query]``
+  - csv ``curl https://searx.me/?format=csv&q=[query]``
+  - opensearch/rss ``curl https://searx.me/?format=rss&q=[query]``
+- Opensearch support (you can set as default search engine)
+- Configurable search engines/categories
+- Different search languages
+- Duckduckgo like !bang functionality with engine shortcuts
+- Parallel queries - relatively fast
 
 Installation
 ~~~~~~~~~~~~
@@ -95,7 +96,7 @@ remember 'untested code is broken code'.
 Runs robot (Selenium) tests, you must have ``firefox`` installed because
 this functional tests actually run the browser and perform operations on
 it. Also searx is executed with
-`settings\_robot <https://github.com/asciimoo/searx/blob/master/searx/settings_robot.py>`__.
+`settings\_robot <https://github.com/asciimoo/searx/blob/master/searx/settings_robot.yml>`__.
 
 ``make flake8``
 '''''''''''''''
@@ -131,14 +132,11 @@ next time you run any other ``make`` command it will rebuild everithing.
 TODO
 ~~~~
 
--  Moar engines
--  Better ui
--  Browser integration
--  Documentation
--  Fix ``flake8`` errors, ``make flake8`` will be merged into
-   ``make tests`` when it does not fail anymore
--  Tests
--  When we have more tests, we can integrate Travis-CI
+- Moar engines
+- Better ui
+- Browser integration
+- Documentation
+- Tests
 
 Bugs
 ~~~~

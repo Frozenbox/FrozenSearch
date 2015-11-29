@@ -1,6 +1,7 @@
 import json
 from urllib import urlencode
 from lxml import html
+from searx.utils import html_to_text
 from searx.engines.xpath import extract_text
 
 url = 'https://api.duckduckgo.com/'\
@@ -17,11 +18,6 @@ def result_to_text(url, text, htmlResult):
         return text
 
 
-def html_to_text(htmlFragment):
-    dom = html.fromstring(htmlFragment)
-    return extract_text(dom)
-
-
 def request(query, params):
     # TODO add kl={locale}
     params['url'] = url.format(query=urlencode({'q': query}))
@@ -29,8 +25,9 @@ def request(query, params):
 
 
 def response(resp):
-    search_res = json.loads(resp.text)
     results = []
+
+    search_res = json.loads(resp.text)
 
     content = ''
     heading = search_res.get('Heading', '')
@@ -72,7 +69,7 @@ def response(resp):
             results.append({'title': heading, 'url': firstURL})
 
     # related topics
-    for ddg_result in search_res.get('RelatedTopics', None):
+    for ddg_result in search_res.get('RelatedTopics', []):
         if 'FirstURL' in ddg_result:
             suggestion = result_to_text(ddg_result.get('FirstURL', None),
                                         ddg_result.get('Text', None),

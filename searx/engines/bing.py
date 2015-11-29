@@ -1,19 +1,22 @@
-## Bing (Web)
-#
-# @website     https://www.bing.com
-# @provide-api yes (http://datamarket.azure.com/dataset/bing/search),
-#              max. 5000 query/month
-#
-# @using-api   no (because of query limit)
-# @results     HTML (using search portal)
-# @stable      no (HTML can change)
-# @parse       url, title, content
-#
-# @todo        publishedDate
+"""
+ Bing (Web)
+
+ @website     https://www.bing.com
+ @provide-api yes (http://datamarket.azure.com/dataset/bing/search),
+              max. 5000 query/month
+
+ @using-api   no (because of query limit)
+ @results     HTML (using search portal)
+ @stable      no (HTML can change)
+ @parse       url, title, content
+
+ @todo        publishedDate
+"""
 
 from urllib import urlencode
 from cgi import escape
 from lxml import html
+from searx.engines.xpath import extract_text
 
 # engine dependent config
 categories = ['general']
@@ -49,14 +52,14 @@ def request(query, params):
 def response(resp):
     results = []
 
-    dom = html.fromstring(resp.content)
+    dom = html.fromstring(resp.text)
 
     # parse results
     for result in dom.xpath('//div[@class="sa_cc"]'):
         link = result.xpath('.//h3/a')[0]
         url = link.attrib.get('href')
-        title = ' '.join(link.xpath('.//text()'))
-        content = escape(' '.join(result.xpath('.//p//text()')))
+        title = extract_text(link)
+        content = escape(extract_text(result.xpath('.//p')))
 
         # append result
         results.append({'url': url,
@@ -71,8 +74,8 @@ def response(resp):
     for result in dom.xpath('//li[@class="b_algo"]'):
         link = result.xpath('.//h2/a')[0]
         url = link.attrib.get('href')
-        title = ' '.join(link.xpath('.//text()'))
-        content = escape(' '.join(result.xpath('.//p//text()')))
+        title = extract_text(link)
+        content = escape(extract_text(result.xpath('.//p')))
 
         # append result
         results.append({'url': url,
