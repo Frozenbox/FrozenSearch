@@ -2,14 +2,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"{% if rtl %} dir="rtl"{% endif %}>
 <head>
     <meta charset="UTF-8" />
-    <meta name="description" content="Searx - a privacy-respecting, hackable metasearch engine" />
+    <meta name="description" content="FrozenSearch - a privacy-respecting, hackable metasearch engine based on searx" />
     <meta name="keywords" content="searx, search, search engine, metasearch, meta search" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="generator" content="searx/{{ searx_version }}">
+    <meta name="generator" content="frozensearch/{{ searx_version }}">
     <meta name="referrer" content="no-referrer">
     <meta name="viewport" content="width=device-width, initial-scale=1 , maximum-scale=1.0, user-scalable=1" />
     {% block meta %}{% endblock %}
-    <title>{% block title %}{% endblock %}searx</title>
+    <title>{% block title %}{% endblock %}{{ instance_name }}</title>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" type="text/css" />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/oscar.min.css') }}" type="text/css" />
@@ -31,7 +31,7 @@
     {% block head %}
     {% endblock %}
 
-    <link title="searx" type="application/opensearchdescription+xml" rel="search" href="{{ url_for('opensearch') }}"/>
+    <link title="{{ instance_name }}" type="application/opensearchdescription+xml" rel="search" href="{{ url_for('opensearch') }}"/>
 
     <script type="text/javascript">
         searx = {};
@@ -75,7 +75,7 @@
         <div class="container">
             {% block footer %}
             {% endblock %}
-            <p class="text-muted">Powered by <a href="https://github.com/frozenbox/frozensearch">FrozenSearch</a> - a privacy-respecting, hackable metasearch engine - Proudly powered by <a href="http://en.wikipedia.org/wiki/Caffeine" title="Caffeine" rel="nofollow">C<sub>8</sub>H<sub>10</sub>N<sub>4</sub>O<sub>2</sub></a></p>
+            <p class="text-muted"><a href="https://github.com/frozenbox/frozensearch">FrozenSearch</a> - a privacy-respecting, hackable metasearch engine - Proudly powered by <a href="http://en.wikipedia.org/wiki/Caffeine" title="Caffeine" rel="nofollow">C<sub>8</sub>H<sub>10</sub>N<sub>4</sub>O<sub>2</sub></a></p>
         </div>
     </div>
     <script src="{{ url_for('static', filename='js/jquery-1.11.1.min.js') }}"></script>
@@ -86,5 +86,8 @@
     {% for script in scripts %}
         <script src="{{ url_for('static', filename=script) }}"></script>
     {% endfor %}
+    <script type="text/javascript">
+        $(function() { $('a[data-toggle="modal"]').attr('href', '#'); });
+    </script>
 </body>
 </html>

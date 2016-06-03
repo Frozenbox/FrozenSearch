@@ -9,13 +9,13 @@ categories = []
 url = 'https://download.finance.yahoo.com/d/quotes.csv?e=.csv&f=sl1d1t1&s={query}=X'
 weight = 100
 
-parser_re = re.compile(u'^\W*(\d+(?:\.\d+)?)\W*([^.0-9].+)\W+in?\W+([^\.]+)\W*$', re.I)  # noqa
+parser_re = re.compile(u'.*?(\d+(?:\.\d+)?) ([^.0-9]+) (?:in|to) ([^.0-9]+)', re.I)  # noqa
 
 db = 1
 
 
 def normalize_name(name):
-    name = name.lower().replace('-', ' ')
+    name = name.lower().replace('-', ' ').rstrip('s')
     name = re.sub(' +', ' ', name)
     return unicodedata.normalize('NFKD', name).lower()
 
